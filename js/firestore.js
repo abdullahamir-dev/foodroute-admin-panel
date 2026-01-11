@@ -32,7 +32,7 @@ document.getElementById('recipeForm').addEventListener('submit', async (e) => {
             protein: parseInt(document.getElementById('protein').value) || 0,
             carbs: parseInt(document.getElementById('carbs').value) || 0,
             fat: parseInt(document.getElementById('fat').value) || 0,
-            cooking_time: parseInt(document.getElementById('cooking_time')) || 0,
+            cooking_time: parseInt(document.getElementById('cooking_time').value) || 0,
             image_url: document.getElementById('image_url').value,
             ingredients: ingredientsArray,
             steps: [], // Default empty list
