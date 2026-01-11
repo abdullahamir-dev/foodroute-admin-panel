@@ -2,71 +2,99 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FoodRoute | Add Recipe</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="bg-[#0f172a] text-slate-100 font-['Inter']">
+
     <div class="flex h-screen overflow-hidden">
         <aside class="w-64 bg-slate-800/50 backdrop-blur-md border-r border-slate-700 p-6 flex flex-col">
-            <div class="mb-10"><h1 class="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">FoodRoute Admin</h1></div>
+            <div class="mb-10">
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">FoodRoute Admin</h1>
+                <p class="text-xs text-slate-400 mt-1">Management Console</p>
+            </div>
             <nav class="flex-1">
                 <ul class="space-y-2">
-                    <li><a href="index.html" class="flex items-center p-3 text-slate-400 hover:bg-slate-700/50 rounded-lg">📊 Dashboard</a></li>
+                    <li><a href="index.html" class="flex items-center p-3 text-slate-400 hover:bg-slate-700/50 rounded-lg transition">📊 Dashboard</a></li>
                     <li><a href="recipes.html" class="flex items-center p-3 text-emerald-400 bg-emerald-400/10 rounded-lg">🍲 Add Recipe</a></li>
                 </ul>
             </nav>
         </aside>
 
         <main class="flex-1 overflow-y-auto p-8 animate-page">
-            <header class="mb-8"><h2 class="text-3xl font-bold">New Recipe</h2></header>
+            <header class="flex justify-between items-center mb-8">
+                <div>
+                    <h2 class="text-3xl font-bold">New Recipe</h2>
+                    <p class="text-slate-400 text-sm mt-1">Populate your Firestore collection with integrity</p>
+                </div>
+            </header>
 
             <div class="stat-card max-w-4xl mx-auto">
                 <form id="recipeForm" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="md:col-span-2">
                             <label class="label-style">Recipe Title</label>
-                            <input type="text" id="title" class="input-style w-full" required>
-                        </div>
-                        
-                        <div>
-                            <label class="label-style">Cooking Time (minutes)</label>
-                            <input type="number" id="cooking_time" class="input-style w-full" placeholder="e.g. 20" required>
+                            <input type="text" id="title" class="input-style w-full" placeholder="e.g. Avocado Toast" required>
                         </div>
                         <div>
                             <label class="label-style">Category</label>
                             <input type="text" id="category" class="input-style w-full" placeholder="Breakfast">
                         </div>
+                        <div>
+                            <label class="label-style">Subcategory (Diet)</label>
+                            <select id="subcategory" class="input-style w-full">
+                                <option value="High Protein">High Protein</option>
+                                <option value="Keto">Keto</option>
+                                <option value="Vegan">Vegan</option>
+                            </select>
+                        </div>
 
-                        <div class="md:col-span-2">
-                            <label class="label-style">Recipe Image</label>
-                            <div class="flex items-center justify-center w-full">
-                                <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-700 rounded-xl cursor-pointer bg-slate-900/50 hover:bg-slate-800 transition">
-                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                        <p class="text-sm text-slate-400" id="file-status">Click to upload image</p>
-                                    </div>
-                                    <input type="file" id="image_file" class="hidden" accept="image/*" required />
-                                </label>
+                        <div class="grid grid-cols-2 gap-4 md:col-span-2 bg-slate-900/40 p-4 rounded-xl border border-slate-700/50">
+                            <div>
+                                <label class="label-style text-xs">Calories (kcal)</label>
+                                <input type="number" id="calories" class="input-style w-full" placeholder="0">
+                            </div>
+                            <div>
+                                <label class="label-style text-xs">Protein (g)</label>
+                                <input type="number" id="protein" class="input-style w-full" placeholder="0">
+                            </div>
+                            <div>
+                                <label class="label-style text-xs">Carbs (g)</label>
+                                <input type="number" id="carbs" class="input-style w-full" placeholder="0">
+                            </div>
+                            <div>
+                                <label class="label-style text-xs">Fat (g)</label>
+                                <input type="number" id="fat" class="input-style w-full" placeholder="0">
+                            </div>
+                            <div>
+                                <label class="label-style text-xs">Cooking Time (min)</label>
+                                <input type="number" id="cooking_time" class="input-style w-full" placeholder="10">
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-4 gap-4 md:col-span-2">
-                            <div><label class="label-style text-xs">Kcal</label><input type="number" id="calories" class="input-style w-full"></div>
-                            <div><label class="label-style text-xs">Protein</label><input type="number" id="protein" class="input-style w-full"></div>
-                            <div><label class="label-style text-xs">Carbs</label><input type="number" id="carbs" class="input-style w-full"></div>
-                            <div><label class="label-style text-xs">Fat</label><input type="number" id="fat" class="input-style w-full"></div>
+                        <div class="md:col-span-2">
+                            <label class="label-style">Image URL</label>
+                            <input type="text" id="image_url" class="input-style w-full" placeholder="https://image-link.com">
                         </div>
-
                         <div class="md:col-span-2">
                             <label class="label-style">Ingredients (Comma separated)</label>
-                            <textarea id="ingredients" class="input-style w-full h-24"></textarea>
+                            <textarea id="ingredients" class="input-style w-full h-24" placeholder="Eggs, Bread, Avocado..."></textarea>
                         </div>
                     </div>
-                    <button type="submit" id="submitBtn" class="btn-primary w-full py-4">🚀 Sync to Firestore</button>
+
+                    <div class="pt-4">
+                        <button type="submit" id="submitBtn" class="btn-primary w-full py-4 text-lg">
+                            🚀 Sync to Firestore
+                        </button>
+                    </div>
                 </form>
             </div>
         </main>
     </div>
+
     <script type="module" src="js/firestore.js"></script>
 </body>
 </html>

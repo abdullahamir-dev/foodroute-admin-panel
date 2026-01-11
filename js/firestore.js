@@ -1,6 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBmBfjq_BmM4d7T-aJyzKmXG1AQ-wn4LIY",
@@ -13,54 +12,40 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app);
-
-// File Status Update
-document.getElementById('image_file').addEventListener('change', (e) => {
-    const fileName = e.target.files[0]?.name;
-    if (fileName) document.getElementById('file-status').innerText = `Selected: ${fileName}`;
-});
 
 document.getElementById('recipeForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('submitBtn');
-    const imageFile = document.getElementById('image_file').files[0];
-    
     btn.disabled = true;
-    btn.innerText = "Uploading Image...";
+    btn.innerText = "⏳ Syncing...";
 
     try {
-        let finalImageUrl = "";
-        
-        // Step 1: Upload to Firebase Storage
-        if (imageFile) {
-            const storageRef = ref(storage, `recipe_images/${Date.now()}_${imageFile.name}`);
-            const snapshot = await uploadBytes(storageRef, imageFile);
-            finalImageUrl = await getDownloadURL(snapshot.ref);
-        }
+        // Converting String to List<String> for Ingredients
+        const ingredientsStr = document.getElementById('ingredients').value;
+        const ingredientsArray = ingredientsStr ? ingredientsStr.split(',').map(i => i.trim()) : [];
 
-        btn.innerText = "Syncing Firestore...";
-
-        // Step 2: Save Document
-        await addDoc(collection(db, "recipes"), {
+        const recipeData = {
             title: document.getElementById('title').value,
-            cooking_time: parseInt(document.getElementById('cooking_time').value) || 0,
             category: document.getElementById('category').value,
+            subcategory: document.getElementById('subcategory').value,
             calories: parseInt(document.getElementById('calories').value) || 0,
             protein: parseInt(document.getElementById('protein').value) || 0,
             carbs: parseInt(document.getElementById('carbs').value) || 0,
             fat: parseInt(document.getElementById('fat').value) || 0,
-            image_url: finalImageUrl, // Dynamic link saved here
-            ingredients: document.getElementById('ingredients').value.split(',').map(i => i.trim()),
+            cooking_time: parseInt(document.getElementById('cooking_time')) || 0,
+            image_url: document.getElementById('image_url').value,
+            ingredients: ingredientsArray,
+            steps: [], // Default empty list
             created_at: serverTimestamp()
-        });
+        };
 
-        alert("Success! Recipe uploaded and image synced.");
+        await addDoc(collection(db, "recipes"), recipeData);
+        
+        alert("Success! Recipe is now live on FoodRoute App.");
         e.target.reset();
-        document.getElementById('file-status').innerText = "Click to upload image";
     } catch (err) {
         console.error(err);
-        alert("Upload failed. Check Firebase Storage rules.");
+        alert("Error: Data integrity check failed.");
     } finally {
         btn.disabled = false;
         btn.innerText = "🚀 Sync to Firestore";
